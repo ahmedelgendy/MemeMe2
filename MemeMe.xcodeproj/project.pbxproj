@@ -91,6 +91,15 @@
 			path = MemeMe/fonts;
 			sourceTree = "<group>";
 		};
+		5252FECF1F1FCE0600311612 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				526941831EEE1FF9006C3864 /* MemeViewController.swift */,
+				526941AF1EF0371C006C3864 /* TextFieldDelegate.swift */,
+			);
+			name = controllers;
+			sourceTree = "<group>";
+		};
 		526941751EEE1FF9006C3864 = {
 			isa = PBXGroup;
 			children = (
@@ -105,12 +114,11 @@
 		526941801EEE1FF9006C3864 /* MemeMe */ = {
 			isa = PBXGroup;
 			children = (
-				5246214D1EFAA888006012E1 /* models */,
 				526941811EEE1FF9006C3864 /* AppDelegate.swift */,
-				526941831EEE1FF9006C3864 /* MemeViewController.swift */,
-				526941AF1EF0371C006C3864 /* TextFieldDelegate.swift */,
 				526941851EEE1FF9006C3864 /* Main.storyboard */,
 				526941881EEE1FF9006C3864 /* Assets.xcassets */,
+				5246214D1EFAA888006012E1 /* models */,
+				5252FECF1F1FCE0600311612 /* controllers */,
 				5269418A1EEE1FF9006C3864 /* LaunchScreen.storyboard */,
 				5269418D1EEE1FF9006C3864 /* Info.plist */,
 			);
