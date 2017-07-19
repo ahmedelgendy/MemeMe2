@@ -95,10 +95,28 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
         self.dismiss(animated: true, completion: nil)
     }
     
+    func saveMeme(){
+        
+        let memedImage = generateMemedImage()
+        
+        _ = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, memedImage: memedImage)
+    }
+    
+    
     @IBAction func shareIT(_ sender: Any) {
         
-        let activityVC = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
+        let memedImage = generateMemedImage()
+        let activityVC = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
 
+        activityVC.completionWithItemsHandler = { activity, completed, items, error in
+            if completed {
+                //Save the image
+                self.saveMeme()
+                print("image saved")
+            }
+        }
+
+        
         self.present(activityVC, animated: true, completion: nil)
     }
 
@@ -107,15 +125,19 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
         // Render view to an image
         navBar.isHidden = true
         toolbar.isHidden = true
+        
         UIGraphicsBeginImageContext(self.view.frame.size)
             view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
             let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
+        
         navBar.isHidden = false
         toolbar.isHidden = false
+        
         return memedImage
     }
     
+
     
     @IBAction func cancelForReset() {
         imagePickerView.image = nil
