@@ -37,12 +37,6 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupDelegates()
-    }
-    
-    func setupDelegates(){
-        self.topText.delegate = textFieldDelegate
-        self.bottomText.delegate = textFieldDelegate
     }
     
     func setupUI(){
@@ -50,18 +44,21 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
         let memeTextAttributes:[String:Any] = [
             NSForegroundColorAttributeName: UIColor.white ,
             NSStrokeColorAttributeName: UIColor.black,
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 24)!,
-            NSStrokeWidthAttributeName: 5.0]
+            NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 28)!,
+            NSStrokeWidthAttributeName: -8.0]
         
-        self.topText.defaultTextAttributes = memeTextAttributes
-        self.bottomText.defaultTextAttributes = memeTextAttributes
-        
-        self.topText.textAlignment = NSTextAlignment.center
-        self.bottomText.textAlignment = NSTextAlignment.center
+        configureTextFields(textField: topText, defaultAttributes: memeTextAttributes)
+        configureTextFields(textField: bottomText, defaultAttributes: memeTextAttributes)
         
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         
         shareBtn.isEnabled = false
+    }
+    
+    func configureTextFields(textField:UITextField, defaultAttributes: [String:Any]){
+        textField.defaultTextAttributes = defaultAttributes
+        textField.textAlignment = NSTextAlignment.center
+        textField.delegate = textFieldDelegate
     }
     
     enum ButtonSourceType : Int {
@@ -98,7 +95,7 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
     func saveMeme(){
         
         let memedImage = generateMemedImage()
-        
+
         _ = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, memedImage: memedImage)
     }
     
@@ -110,34 +107,32 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
 
         activityVC.completionWithItemsHandler = { activity, completed, items, error in
             if completed {
-                //Save the image
+                //Save the meme
                 self.saveMeme()
-                print("image saved")
             }
         }
-
-        
         self.present(activityVC, animated: true, completion: nil)
     }
 
     func generateMemedImage() -> UIImage {
         
         // Render view to an image
-        navBar.isHidden = true
-        toolbar.isHidden = true
+        configureBars(hidden: true)
         
         UIGraphicsBeginImageContext(self.view.frame.size)
             view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
             let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
-        navBar.isHidden = false
-        toolbar.isHidden = false
+        configureBars(hidden: false)
         
         return memedImage
     }
     
-
+    func configureBars(hidden: Bool){
+        navBar.isHidden = hidden
+        toolbar.isHidden = hidden
+    }
     
     @IBAction func cancelForReset() {
         imagePickerView.image = nil
@@ -146,21 +141,22 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
         shareBtn.isEnabled = false
     }
     
-    func keyboardWillShow(_ notification: NSNotification) {
-        if !keyboardIsShown{
-            self.view.frame.origin.y -= getKeyboardHeight(notification)
+        func keyboardWillShow(_ notification: NSNotification) {
+            if bottomText.isFirstResponder{
+                self.view.frame.origin.y -= getKeyboardHeight(notification)
+                keyboardIsShown = true
+            }
+            if topText.isFirstResponder && keyboardIsShown {
+                self.view.frame.origin.y += getKeyboardHeight(notification)
+            }
         }
-        keyboardIsShown = true
-
-    }
     
-    func keyboardWillHide(_ notification: NSNotification) {
-        
-        if keyboardIsShown{
-            self.view.frame.origin.y += getKeyboardHeight(notification)
+        func keyboardWillHide(_ notification: NSNotification) {
+            if bottomText.isFirstResponder {
+                self.view.frame.origin.y += getKeyboardHeight(notification)
+            }
+            keyboardIsShown = false
         }
-        keyboardIsShown = false
-    }
     
     func getKeyboardHeight(_ notification: NSNotification) -> CGFloat{
         let userInfo = notification.userInfo
