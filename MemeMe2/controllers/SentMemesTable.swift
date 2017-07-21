@@ -9,15 +9,16 @@
 import Foundation
 import UIKit
 class TableViewController: UITableViewController {
+    
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(navToMeme))
+
         self.tableView.reloadData()
 
     }
     override func viewDidAppear(_ animated: Bool) {
     }
     
-    func navToMeme(){
+    @IBAction func showMemeEditor(){
         let storyboard = self.storyboard?.instantiateViewController(withIdentifier: "memeViewController") as! MemeViewController
         present(storyboard, animated: true, completion: nil)
     }
@@ -35,6 +36,12 @@ class TableViewController: UITableViewController {
         cell.imageView?.image = meme.memedImage
         print("cell initiated", indexPath.row)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "memeDetailsController") as! MemeDetailsController
+        controller.meme = appDelegate.memes[(indexPath as IndexPath).row]
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

@@ -13,9 +13,30 @@ class CollectipnViewController: UICollectionViewController {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
+    @IBOutlet weak var flowLayout : UICollectionViewFlowLayout!
+    
+    override func viewDidLoad() {
+        setFlowLayout()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         collectionView?.reloadData()
     }
+    
+    @IBAction func showMemeEditor(){
+        let storyboard = self.storyboard?.instantiateViewController(withIdentifier: "memeViewController") as! MemeViewController
+        present(storyboard, animated: true, completion: nil)
+    }
+    
+    func setFlowLayout(){
+        let space:CGFloat = 3.0
+        let dims = (view.frame.size.width - (2 * space)) / 3.0
+        
+        flowLayout.minimumInteritemSpacing = space
+        flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize = CGSize(width: dims, height: dims)
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return appDelegate.memes.count
     }
