@@ -15,25 +15,21 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var shareBtn: UIBarButtonItem!
-    
     @IBOutlet weak var navBar: UINavigationBar!
     @IBOutlet weak var toolbar: UIToolbar!
     
     var keyboardIsShown = false
-    
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     let textFieldDelegate = TextFieldDelegate()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.subscribeToKeyboardNotification()
-        
+        subscribeToKeyboardNotification()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.unSubscribeToKeyboardNotification()
+        unSubscribeToKeyboardNotification()
     }
     
     override func viewDidLoad() {
@@ -79,7 +75,7 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
             imagePicker.sourceType = .photoLibrary
         }
         
-        self.present(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
@@ -91,7 +87,7 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
             print("Something went wrong")
         }
         
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func saveMeme(){
@@ -115,7 +111,7 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate,UINa
                 self.saveMeme()
             }
         }
-        self.present(activityVC, animated: true, completion: nil)
+        present(activityVC, animated: true, completion: nil)
     }
     
     func generateMemedImage() -> UIImage {
